@@ -1,5 +1,5 @@
 # NLP
-Code to the natural language processing problem in IITG data science hackathon. 
-Essential libraries used: pandas, sklearn, nltk, xgboost .
-Data preproccessing involved removing stopwords, stemming, identifying and removing outliers (using isolation forest). 
-Converted the output string data into integers using label encoder, and created corpus containg all the bag of input words using CountVectorizer and fed this to Xgboost classifier.
+Natural language processing problem in IITG data science hackathon. 
+We were given a labelled dataset (train.csv) containing several different material types (such as books, videodisc, sounddisc etc) with a description of them which involved their title, name of writer, publication information and summary.
+We were asked to predict the material type of the contents of test.csv and write them to another csv file.
+An accuracy of over 86% was acheived.
