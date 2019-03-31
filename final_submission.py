@@ -15,12 +15,11 @@ from nltk.stem.snowball import SnowballStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import IsolationForest
 import csv
+
 data = pd.read_csv("train_file.csv")
 input_len = data.shape[0]
-# print(data.shape)
-# print(data.head)
-labels = data['MaterialType'].values.flatten()	# make a list from the vertical column
 
+labels = data['MaterialType'].values.flatten()	# make a list from the vertical column
 data = data.drop(['ID','CheckoutMonth','CheckoutYear','Checkouts','PublicationYear','MaterialType'], axis = 1)
 train_text = data['CheckoutType'].map(str)+' '+data['UsageClass'].map(str)+' '+data['Title'].map(str)+' '+data['Creator'].map(str)+' '+data['Subjects'].map(str)+' '+data['Publisher'].map(str)
 del data
@@ -32,25 +31,14 @@ del labels
 
 
 data = pd.read_csv("test_file.csv")
-# print(data.shape)
+
 print(data.head())
 data = data.drop(['ID','CheckoutMonth','CheckoutYear','Checkouts','PublicationYear'], axis = 1)
 test_text = data['CheckoutType'].map(str)+' '+data['UsageClass'].map(str)+' '+data['Title'].map(str)+' '+data['Creator'].map(str)+' '+data['Subjects'].map(str)+' '+data['Publisher'].map(str)
 del data
 
 all_text = train_text
-# print(all_text)
-# print ( type(all_text))
-# print("pahle->")
-# print(all_text.shape)
-# print('are ruk')
-# print(test_text)
 all_text = all_text.append(test_text)
-# print('aage')
-# print(all_text)
-# print("baad me->")
-# print(all_text.shape)
-
 
 sw = stopwords.words('english')
 ss = SnowballStemmer('english')
@@ -65,13 +53,13 @@ for row in all_text:
 print(np.shape(corpus));
 vectorizer = CountVectorizer().fit(corpus)		
 train_features = vectorizer.transform(corpus)	#keeping count of each word in each string -tuple of pair and int
-# print(train_features)
+
 
 forest = IsolationForest(n_estimators=100, contamination=0.045)
 forest.fit(train_features)
 outliers = forest.predict(train_features)
 # print(outliers.shape)
-# print("haha\n")
+
 new_corpus=[]
 for i in range(0,len(outliers)):
     if outliers[i]==1:			# +ve score means inliers
@@ -90,10 +78,10 @@ for i in out:
     corpus_in.append(corpus[i])
     train_labels_in.append(train_labels[i])
 
-print(np.shape(out))       
-print(np.shape(train_labels_in))
-print(np.shape(corpus_in))
-print(train_labels.shape)
+#print(np.shape(out))       
+#print(np.shape(train_labels_in))
+#print(np.shape(corpus_in))
+#print(train_labels.shape)
 vectorizer2 = CountVectorizer().fit(new_corpus)
 train_features_in = vectorizer2.transform(corpus_in)
 test_features = vectorizer2.transform(test_text)
@@ -119,19 +107,3 @@ for row in pred:
     writer.writerows([[str(cnt), str(le.inverse_transform(row))]])
     cnt = cnt+1
 
-# model = XGBClassifier()
-
-# model.fit(train1,train2)
-
-# y_pred = model.predict(test)
-
-# predictions = [value for value in y_pred]
-
-
-# import csv
-# with open("af.csv", "wb") as csv_file:
-#         writer = csv.writer(csv_file, delimiter=',')
-#         writer.writerow(['ID','MaterialType'])
-#         for i in np.arange(21102):
-#             writer.writerow([i+31654,val[i]])
-# csv_file.close()
